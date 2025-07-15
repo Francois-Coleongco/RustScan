@@ -1,8 +1,6 @@
 name: CD Pipeline
 
-on:
-  release:
-    types: [published]
+on: [push]
 
 jobs:
   build-nix:
@@ -54,11 +52,11 @@ jobs:
         if: matrix.type == 'ubuntu-x64'
         run: |
           tar czf ${{ matrix.name }}.tar.gz -C target/x86_64-unknown-linux-musl/release rustscan
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: ${{ matrix.path }}
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         if: matrix.type == 'ubuntu-x64'
         with:
           name: ${{ matrix.name }}.tar.gz
@@ -81,7 +79,7 @@ jobs:
       - name: Deb Build
         run: cargo deb --target=x86_64-unknown-linux-musl
       - name: Upload Deb Artifact
-        uses: softprops/action-gh-release@v2
+        uses: actions/upload-artifact@v4
         with:
           name: rustscan.deb
           path: ./target/x86_64-unknown-linux-musl/debian/*
@@ -106,11 +104,11 @@ jobs:
       - name: Build tar.gz for homebrew installs
         run: |
           tar czf x86_64-macos-rustscan.tar.gz -C target/x86_64-apple-darwin/release rustscan
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: x86_64-macos-rustscan
           path: target/x86_64-apple-darwin/release/rustscan
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: x86_64-macos-rustscan.tar.gz
           path: x86_64-macos-rustscan.tar.gz
@@ -135,11 +133,11 @@ jobs:
       - name: Build tar.gz for homebrew installs
         run: |
           tar czf aarch64-macos-rustscan.tar.gz -C target/aarch64-apple-darwin/release rustscan
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: aarch64-macos-rustscan
           path: target/aarch64-apple-darwin/release/rustscan
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: aarch64-macos-rustscan.tar.gz
           path: aarch64-macos-rustscan.tar.gz
@@ -175,7 +173,7 @@ jobs:
           args: "--locked --release"
           strip: true
           toolchain: stable
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: ${{ matrix.path }}
