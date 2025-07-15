@@ -72,8 +72,11 @@ jobs:
       IN_PIPELINE: true
     steps:
       - uses: actions/checkout@v4
+
       - name: Install cargo-deb
-        run: cargo install -f cargo-deb
+        run: |
+          cargo install -f cargo-deb
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       - uses: awalsh128/cache-apt-pkgs-action@v1
         with:
           packages: musl-tools # provides musl-gcc
@@ -96,6 +99,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Cache cargo & target directories
         uses: Swatinem/rust-cache@v2
+      - name: Add macOS target
+        run: rustup target add x86_64-apple-darwin
       - name: Build binary
         uses: houseabsolute/actions-rust-cross@v0
         with:
